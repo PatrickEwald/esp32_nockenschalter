@@ -15,12 +15,19 @@ namespace FileSystem {
     }
   }
 
-  void sendFile(AsyncWebServerRequest* request, const String& path, const String& contentType) {
+  void sendFile(AsyncWebServerRequest *request, const String& path, const String& contentType) {
     if (!LittleFS.exists(path)) {
-      request->send(404, "text/plain", "Datei nicht gefunden!");
+      request->send(404, "text/plain", "File not found");
       return;
     }
 
-    request->send(LittleFS, path, contentType);
+    AsyncWebServerResponse *response = request->beginResponse(LittleFS, path, contentType);
+
+    // Nur Cache-Control setzen, wenn NICHT log.txt
+    if (String(path) != "/log.txt") {
+      response->addHeader("Cache-Control", "public, max-age=31536000");
+    }
+
+    request->send(response);
   }
 }

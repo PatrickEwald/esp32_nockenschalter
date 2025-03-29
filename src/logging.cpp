@@ -19,11 +19,13 @@ namespace Log {
     // int quality = (rssi <= -100) ? 0 : (rssi >= -50) ? 100 : 2 * (rssi + 100);
 
     struct tm timeinfo;
-    String timeStr = "??:??";
+    String timeStr = "??:??:??";
     if (getLocalTime(&timeinfo)) {
-      char timeBuffer[6];
-      snprintf(timeBuffer, sizeof(timeBuffer), "%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min);
-      timeStr = String(timeBuffer);
+      char timeBuffer[20];
+        snprintf(timeBuffer, sizeof(timeBuffer), "%04d-%02d-%02d %02d:%02d:%02d",
+         timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday,
+         timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+         timeStr = String(timeBuffer);
     }
 
     String fullMsg = "[" + timeStr + "] " + msg +

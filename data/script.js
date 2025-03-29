@@ -37,8 +37,8 @@ function initWebSocket() {
   socket.onmessage = (event) => {
     try {
       const msg = JSON.parse(event.data);
-      console.log("📥 Neue Servo-Position:", msg.servo);
       updateButtonHighlight(msg.servo);
+      console.log("📥 Neue Servo-Position:", msg.servo);
     } catch (e) {
       console.warn("❌ Ungültige WebSocket-Nachricht:", event.data);
     }
@@ -74,7 +74,6 @@ function loadSchedule() {
         }
         scheduleHTML += `
           <p>
-              ${index + 1}: 
               <input type="time" id="t${
                 index + 1
               }" value="${time}" placeholder="HHMM" maxlength="4" onchange="scheduleChanged()" ${
