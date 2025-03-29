@@ -1,0 +1,150 @@
+/* Allgemeines Styling */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Überschriften */
+h1,
+h2 {
+  color: #333;
+  margin-bottom: 0;
+}
+
+/* Buttons */
+button,
+input[type="submit"] {
+  padding: 15px 25px;
+  margin: 10px;
+  font-size: 20px;
+  border: none;
+  background-color: #909aa5;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button.active,
+button.active:hover {
+  background-color: #076d46;
+}
+
+button:hover {
+  background-color: #4b4e51;
+}
+
+/* Formular & Eingabefelder */
+form {
+  max-width: 400px;
+  margin: auto;
+}
+
+input,
+select {
+  /* width: 100%; */
+  padding: 12px;
+  font-size: 18px;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Container für Zeit- und Positionsfelder */
+.schedule-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Label für besseres Layout */
+label {
+  font-weight: bold;
+  text-align: left;
+  display: block;
+}
+
+#schedule {
+  display: flex;
+  flex-direction: column; /* Stapelt die <p>-Elemente vertikal */
+  gap: 10px; /* Abstand zwischen den Elementen */
+}
+
+#schedule p {
+  display: flex;
+  align-items: center; /* Vertikal zentrieren */
+  gap: 10px; /* Abstand zwischen den Kind-Elementen */
+  justify-content: center;
+  margin: 10px;
+}
+
+/* #schedule p:first-child {
+    justify-content: space-evenly;
+    margin:0 0 -16px;
+} */
+
+/* Responsive Design für kleine Bildschirme */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 18px;
+  }
+
+  input,
+  select {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .schedule-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+#toast-container {
+  position: fixed;
+  top: 20px;
+  left: calc(50% - 104px);
+  z-index: 1000;
+}
+
+.toast {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#unsavedChangesWarning {
+  position: fixed;
+  top: 5px;
+  left: calc(50% - 160px);
+  background: orange;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}

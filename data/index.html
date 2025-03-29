@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESP32 Servo Steuerung</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <button onclick="moveServo(144)" id="Sauna">Sauna</button>
+    <button onclick="moveServo(94)" id="Aus">Aus</button>
+    <button onclick="moveServo(40)" id="Boiler">Boiler</button>
+    <h2>
+      Zeitsteuerung
+      <input type="checkbox" id="toggle" onchange="toggleTimeControl()" />
+    </h2>
+    <form id="scheduleForm">
+      <div id="schedule"></div>
+      <input type="submit" value="Speichern" />
+    </form>
+    <script src="script.js"></script>
+  </body>
+</html>
