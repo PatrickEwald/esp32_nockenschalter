@@ -88,6 +88,14 @@ void setupAPIRoutes()
     Schedule::save();
     request->redirect("/"); });
 
+  server.on("/togglePush", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
+  bool newState = !ServoControl::isPushEnabled();
+  ServoControl::setPushEnabled(newState);
+
+  String status = newState ? "aktiviert" : "deaktiviert";
+  request->send(200, "text/plain", status); });
+
   server.on("/toggleTimeControl", HTTP_GET, [](AsyncWebServerRequest *request)
             {
     Schedule::toggleTimeControl();
