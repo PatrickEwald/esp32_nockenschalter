@@ -1,4 +1,3 @@
-/* Allgemeines Styling */
 body {
   font-family: Arial, sans-serif;
   text-align: center;
@@ -7,14 +6,12 @@ body {
   padding: 20px;
 }
 
-/* Überschriften */
 h1,
 h2 {
   color: #333;
-  margin-bottom: 0;
+  margin: 0.5rem;
 }
 
-/* Buttons */
 button,
 input[type="submit"] {
   padding: 15px 25px;
@@ -30,6 +27,8 @@ input[type="submit"] {
   display: block;
   margin-left: auto;
   margin-right: auto;
+  opacity: 1;
+  transition: opacity 0.3s;
 }
 
 button.active,
@@ -41,7 +40,10 @@ button:hover {
   background-color: #4b4e51;
 }
 
-/* Formular & Eingabefelder */
+input[type="submit"]:disabled {
+  opacity: 0;
+}
+
 form {
   max-width: 400px;
   margin: auto;
@@ -49,7 +51,6 @@ form {
 
 input,
 select {
-  /* width: 100%; */
   padding: 12px;
   font-size: 18px;
   margin: 5px 0;
@@ -58,7 +59,16 @@ select {
   box-sizing: border-box;
 }
 
-/* Container für Zeit- und Positionsfelder */
+input:disabled,
+select:disabled {
+  opacity: 0.3;
+}
+
+#currentTime {
+  margin-top: 1rem;
+  min-height: 1.2rem;
+}
+
 .schedule-item {
   display: flex;
   justify-content: space-between;
@@ -66,53 +76,18 @@ select {
   margin-bottom: 10px;
 }
 
-/* Label für besseres Layout */
-label {
-  font-weight: bold;
-  text-align: left;
-  display: block;
-}
-
 #schedule {
   display: flex;
-  flex-direction: column; /* Stapelt die <p>-Elemente vertikal */
-  gap: 10px; /* Abstand zwischen den Elementen */
+  flex-direction: column;
+  gap: 10px;
 }
 
 #schedule p {
   display: flex;
-  align-items: center; /* Vertikal zentrieren */
-  gap: 10px; /* Abstand zwischen den Kind-Elementen */
+  align-items: center;
+  gap: 10px;
   justify-content: center;
   margin: 10px;
-}
-
-/* #schedule p:first-child {
-    justify-content: space-evenly;
-    margin:0 0 -16px;
-} */
-
-/* Responsive Design für kleine Bildschirme */
-@media (max-width: 600px) {
-  body {
-    padding: 10px;
-  }
-
-  button {
-    width: 100%;
-    font-size: 18px;
-  }
-
-  input,
-  select {
-    font-size: 16px;
-    padding: 10px;
-  }
-
-  .schedule-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
 
 #toast-container {
@@ -147,4 +122,27 @@ label {
   padding: 10px;
   border-radius: 5px;
   font-weight: bold;
+}
+
+/* Responsive Design für kleine Bildschirme */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 18px;
+  }
+
+  input,
+  select {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .schedule-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

@@ -3,36 +3,51 @@
 #include "logging.h"
 #include <ESP32Servo.h>
 #include "websocket_server.h"
+#include <Preferences.h>
 
-namespace ServoControl {
+static Preferences preferences;
+
+namespace ServoControl
+{
   static Servo myServo;
   static int currentPos = AUS;
 
-  void init() {
+  void init()
+  {
+    preferences.begin("servo", false);
+    currentPos = preferences.getInt("lastPos", AUS);
+
     myServo.attach(servoPin);
     myServo.write(currentPos);
     Log::add("Servo initialisiert auf: " + getPositionName(currentPos));
   }
 
-  void move(int position) {
-  if (position == currentPos) {
-    return;
+  void move(int position)
+  {
+    if (position == currentPos)
+    {
+      return;
+    }
+
+    myServo.write(position);
+    currentPos = position;
+    preferences.putInt("lastPos", currentPos);
+    Log::add("Servo bewegt zu: " + getPositionName(position));
+    WebSocketServer::broadcastServoPosition();
   }
 
-  myServo.write(position);
-  currentPos = position;
-  Log::add("Servo bewegt zu: " + getPositionName(position));
-  WebSocketServer::broadcastServoPosition(); 
-  }
-
-  int getCurrentPosition() {
+  int getCurrentPosition()
+  {
     return currentPos;
   }
 
-String getPositionName(int position) {
-  for (int i = 0; i < 3; i++) {
-    if (position == POSITIONS[i]) return POSITION_NAMES[i];
+  String getPositionName(int position)
+  {
+    for (int i = 0; i < 3; i++)
+    {
+      if (position == POSITIONS[i])
+        return POSITION_NAMES[i];
+    }
+    return "Unbekannt";
   }
-  return "Unbekannt";
-}
 }

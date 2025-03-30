@@ -1,4 +1,3 @@
-
 #include <Arduino.h>
 #include <EEPROM.h>
 #include "config.h"
@@ -11,9 +10,12 @@
 #include "webserver.h"
 #include "websocket_server.h"
 #include "button.h"
+#include <Ticker.h>
 
+Ticker timeTicker;
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   delay(500);
 
@@ -24,7 +26,8 @@ void setup() {
 
   configTzTime("CET-1CEST,M3.5.0/2,M10.5.0/3", ntpServer);
   struct tm timeinfo;
-  while (!getLocalTime(&timeinfo)) {
+  while (!getLocalTime(&timeinfo))
+  {
     Serial.println("Warte auf Zeit vom NTP-Server...");
     delay(1000);
   }
@@ -35,13 +38,22 @@ void setup() {
   WebSocketServer::init(server);
   WebServer::init();
 
+  timeTicker.attach(1, []()
+                    {
+  if (WebSocketServer::hasClients()) {
+    WebSocketServer::broadcastCurrentTime();
+  } });
+
   Log::add("Setup abgeschlossen.");
 }
 
-void loop() {
+void loop()
+{
   OTASetup::handle();
-  if (Schedule::timeControlEnabled()) {
+  if (Schedule::timeControlEnabled())
+  {
     Schedule::checkAndRun();
   }
   Button::check();
+  WebSocketServer::loop();
 }

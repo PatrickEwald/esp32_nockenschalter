@@ -4,7 +4,8 @@
 #include "logging.h"
 #include <Arduino.h>
 
-namespace Button {
+namespace Button
+{
   static const int sequence[] = {SAUNA, AUS, BOILER, AUS};
   static const int sequenceLength = sizeof(sequence) / sizeof(sequence[0]);
   static int buttonState = 0;
@@ -12,22 +13,27 @@ namespace Button {
   static unsigned long lastDebounceTime = 0;
   constexpr unsigned long debounceDelay = 500;
 
-  void IRAM_ATTR handleInterrupt() {
+  void IRAM_ATTR handleInterrupt()
+  {
     unsigned long currentTime = millis();
-    if (currentTime - lastDebounceTime > debounceDelay) {
+    if (currentTime - lastDebounceTime > debounceDelay)
+    {
       pressed = true;
       lastDebounceTime = currentTime;
     }
   }
 
-  void init() {
+  void init()
+  {
     pinMode(buttonPin, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(buttonPin), handleInterrupt, FALLING);
     Log::add("Button-Interrupt eingerichtet.");
   }
 
-  void check() {
-    if (pressed) {
+  void check()
+  {
+    if (pressed)
+    {
       pressed = false;
       buttonState = (buttonState + 1) % sequenceLength;
       int newPos = sequence[buttonState];

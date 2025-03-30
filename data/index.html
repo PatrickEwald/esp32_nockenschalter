@@ -2,21 +2,25 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ESP32 Servo Steuerung</title>
     <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   </head>
   <body>
     <button onclick="moveServo(144)" id="Sauna">Sauna</button>
     <button onclick="moveServo(94)" id="Aus">Aus</button>
     <button onclick="moveServo(40)" id="Boiler">Boiler</button>
+    <div id="currentTime"></div>
     <h2>
       Zeitsteuerung
       <input type="checkbox" id="toggle" onchange="toggleTimeControl()" />
     </h2>
     <form id="scheduleForm">
       <div id="schedule"></div>
-      <input type="submit" value="Speichern" />
+      <input type="submit" value="Speichern" disabled />
     </form>
     <script src="script.js"></script>
   </body>

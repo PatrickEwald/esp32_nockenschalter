@@ -10,21 +10,25 @@ AsyncWebServer server(80);
 
 // ===== Hilfsfunktionen =====
 
-void notFound(AsyncWebServerRequest *request) {
+void notFound(AsyncWebServerRequest *request)
+{
   request->send(404, "text/plain", "Datei nicht gefunden");
 }
 
-String buildScheduleJson() {
+String buildScheduleJson()
+{
   String json = "[";
   auto times = Schedule::getTimes();
   auto positions = Schedule::getPositions();
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++)
+  {
     char timeBuf[5];
     snprintf(timeBuf, sizeof(timeBuf), "%04d", times[i]);
     json += "{\"time\":\"" + String(timeBuf) + "\",\"position\":\"" +
             ServoControl::getPositionName(positions[i]) + "\"}";
-    if (i < 3) json += ",";
+    if (i < 3)
+      json += ",";
   }
   json += "]";
   return json;
@@ -32,30 +36,37 @@ String buildScheduleJson() {
 
 // ===== Routengruppen =====
 
-void setupStaticRoutes() {
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-    FileSystem::sendFile(request, "/index.html", "text/html");
-  });
+void setupStaticRoutes()
+{
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+            { FileSystem::sendFile(request, "/index.html", "text/html"); });
 
-  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request) {
-    FileSystem::sendFile(request, "/style.css", "text/css");
-  });
+  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
+            { FileSystem::sendFile(request, "/style.css", "text/css"); });
 
-  server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request) {
-    FileSystem::sendFile(request, "/script.js", "application/javascript");
-  });
+  server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request)
+            { FileSystem::sendFile(request, "/script.js", "application/javascript"); });
 
-  server.on("/logsFile", HTTP_GET, [](AsyncWebServerRequest *request) {
-    FileSystem::sendFile(request, "/log.txt", "text/plain");
-  });
+  server.on("/logsFile", HTTP_GET, [](AsyncWebServerRequest *request)
+            { FileSystem::sendFile(request, "/log.txt", "text/plain"); });
+
+  server.on("/favicon-32x32.png", HTTP_GET, [](AsyncWebServerRequest *request)
+            { FileSystem::sendFile(request, "/favicon-32x32.png", "image/png"); });
+
+  server.on("/apple-touch-icon.png", HTTP_GET, [](AsyncWebServerRequest *request)
+            { FileSystem::sendFile(request, "/apple-touch-icon.png", "image/png"); });
+
+  server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request)
+            { FileSystem::sendFile(request, "/favicon.ico", "image/x-icon"); });
 }
 
-void setupAPIRoutes() {
-  server.on("/getSchedule", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "application/json", buildScheduleJson());
-  });
+void setupAPIRoutes()
+{
+  server.on("/getSchedule", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "application/json", buildScheduleJson()); });
 
-  server.on("/setSchedule", HTTP_GET, [](AsyncWebServerRequest *request) {
+  server.on("/setSchedule", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
     auto times = Schedule::getTimes();
     auto positions = Schedule::getPositions();
 
@@ -75,48 +86,45 @@ void setupAPIRoutes() {
     }
 
     Schedule::save();
-    request->redirect("/");
-  });
+    request->redirect("/"); });
 
-  server.on("/toggleTimeControl", HTTP_GET, [](AsyncWebServerRequest *request) {
+  server.on("/toggleTimeControl", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
     Schedule::toggleTimeControl();
-    request->send(200, "text/plain", Schedule::timeControlEnabled() ? "Zeitsteuerung aktiviert" : "Zeitsteuerung deaktiviert");
-  });
+    request->send(200, "text/plain", Schedule::timeControlEnabled() ? "Zeitsteuerung aktiviert" : "Zeitsteuerung deaktiviert"); });
 
-  server.on("/getTimeControl", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", Schedule::timeControlEnabled() ? "aktiviert" : "deaktiviert");
-  });
+  server.on("/getTimeControl", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "text/plain", Schedule::timeControlEnabled() ? "aktiviert" : "deaktiviert"); });
 
-  server.on("/servoPos", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", ServoControl::getPositionName(ServoControl::getCurrentPosition()));
-  });
+  server.on("/servoPos", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "text/plain", ServoControl::getPositionName(ServoControl::getCurrentPosition())); });
 
-  server.on("/moveServo", HTTP_GET, [](AsyncWebServerRequest *request) {
+  server.on("/moveServo", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
     if (request->hasParam("pos")) {
       int pos = request->getParam("pos")->value().toInt();
       ServoControl::move(pos);
       request->send(200, "text/plain", "Servo bewegt auf " + ServoControl::getPositionName(pos));
     } else {
       request->send(400, "text/plain", "Keine Position angegeben");
-    }
-  });
+    } });
 }
 
-void setupDebugRoutes() {
-  server.on("/logs", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/plain", Log::get());
-  });
+void setupDebugRoutes()
+{
+  server.on("/logs", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(200, "text/plain", Log::get()); });
 
-  server.on("/clearLog", HTTP_GET, [](AsyncWebServerRequest *request) {
+  server.on("/clearLog", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
     Log::clearLogFile();
-    request->send(200, "text/plain", "Logdatei wurde geleert");
-  });
+    request->send(200, "text/plain", "Logdatei wurde geleert"); });
 }
 
-
-
-namespace WebServer {
-  void init() {
+namespace WebServer
+{
+  void init()
+  {
     setupStaticRoutes();
     setupAPIRoutes();
     setupDebugRoutes();

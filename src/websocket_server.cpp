@@ -11,38 +11,62 @@ void onWebSocketEvent(AsyncWebSocket *server,
                       AwsEventType type,
                       void *arg,
                       uint8_t *data,
-                      size_t len) {
-  if (type == WS_EVT_CONNECT) {
-    IPAddress newIP = client->remoteIP();
-    uint32_t newId = client->id();
+                      size_t len)
+{
+  if (type == WS_EVT_CONNECT)
+  {
+    uint32_t id = client->id();
+    Log::add("WebSocket verbunden: " + String(id) + " | Aktive Verbindungen: " + String(ws.count()));
 
-    // Durch alle existierenden Clients iterieren
-    for (auto c : ws.getClients()) {
-      if (c->id() != newId && c->remoteIP() == newIP) {
-        Log::add("Doppelte WebSocket-Verbindung erkannt. Alte Verbindung wird geschlossen. ID: " + String(c->id()));
-        c->close();
-      }
-    }
-    Log::add("WebSocket verbunden: " + String(newId) + " | Aktive Verbindungen: " + String(ws.count()));
     String pos = ServoControl::getPositionName(ServoControl::getCurrentPosition());
     client->text("{\"servo\":\"" + pos + "\"}");
-  } else if (type == WS_EVT_DISCONNECT) {
+  }
+  else if (type == WS_EVT_DISCONNECT)
+  {
     Log::add("WebSocket getrennt: " + String(client->id()) + " | Aktive Verbindungen: " + String(ws.count()));
   }
 }
 
-void WebSocketServer::init(AsyncWebServer &server) {
+void WebSocketServer::init(AsyncWebServer &server)
+{
   ws.onEvent(onWebSocketEvent);
   server.addHandler(&ws);
   Log::add("WebSocket initialisiert.");
 }
 
-void WebSocketServer::broadcastServoPosition() {
+void WebSocketServer::broadcastServoPosition()
+{
   int current = ServoControl::getCurrentPosition();
-  if (current != lastSentPosition) {
+  if (current != lastSentPosition)
+  {
     lastSentPosition = current;
     String pos = ServoControl::getPositionName(current);
     ws.textAll("{\"servo\":\"" + pos + "\"}");
     Log::add("WebSocket-Update: " + pos);
   }
+}
+
+void WebSocketServer::broadcastCurrentTime()
+{
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo))
+  {
+    Log::add("Fehler beim Abrufen der lokalen Zeit");
+    return;
+  }
+
+  char timeString[9];
+  snprintf(timeString, sizeof(timeString), "%02d:%02d:%02d",
+           timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+  ws.textAll("{\"time\":\"" + String(timeString) + "\"}");
+}
+
+bool WebSocketServer::hasClients()
+{
+  return ws.count() > 0;
+}
+
+void WebSocketServer::loop()
+{
+  // kein Close-Handling mehr notwendig
 }

@@ -1,10 +1,11 @@
 #include <ESPAsyncWebServer.h>
 #pragma once
 
-extern AsyncWebServer server; 
+extern AsyncWebServer server;
 
-void notFound(AsyncWebServerRequest *request);  // Optional: für 404
+void notFound(AsyncWebServerRequest *request); // Optional: für 404
 
-namespace WebServer {
+namespace WebServer
+{
   void init();
 }
