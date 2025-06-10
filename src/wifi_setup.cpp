@@ -30,6 +30,26 @@ namespace WiFiSetup
     Log::add("WLAN verbunden! IP: " + WiFi.localIP().toString());
   }
 
+  String getIP()
+  {
+    return WiFi.localIP().toString();
+  }
+
+  int getRSSI()
+  {
+    return WiFi.RSSI();
+  }
+
+  int getQuality()
+  {
+    int rssi = WiFi.RSSI();
+    if (rssi <= -100)
+      return 0;
+    if (rssi >= -50)
+      return 100;
+    return 2 * (rssi + 100);
+  }
+
   void checkConnection()
   {
     unsigned long now = millis();
