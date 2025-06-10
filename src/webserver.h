@@ -3,7 +3,7 @@
 
 extern AsyncWebServer server;
 
-void notFound(AsyncWebServerRequest *request); // Optional: für 404
+void notFound(AsyncWebServerRequest *request); // Handler für 404-Fehlerseiten
 
 namespace WebServer
 {
